@@ -18,8 +18,8 @@ public class BaseTest {
         driver.manage().window().maximize();
     }
 
-//    @After
-//    public void closeBrowser(){
-//            driver.close();
-//        }
+    @After
+    public void closeBrowser(){
+            driver.close();
+        }
 }
