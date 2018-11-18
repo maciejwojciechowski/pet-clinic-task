@@ -3,7 +3,6 @@ package com.infoshare.petclinic.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class FindOwnersPage extends BasePage{
 
@@ -16,18 +15,24 @@ public class FindOwnersPage extends BasePage{
     @FindBy(xpath = "//button[contains(text(),'Find')]")
     private WebElement buttonFindOwner;
 
+    @FindBy(xpath = "//p[text()='has not been found']")
+    private WebElement textNotFound;
+
     public FindOwnersPage(WebDriver driver){
         super(driver);
     }
 
     public void searchOwnerByName(String ownersName){
-//        wait.until(ExpectedConditions.visibilityOf(inputLastName));
         inputLastName.sendKeys(ownersName);
         buttonFindOwner.click();
     }
 
     public void clickAddOwner(){
         buttonAddOwner.click();
+    }
+
+    public boolean verifyNotFoundText(){
+        return textNotFound.isDisplayed();
     }
 
 }

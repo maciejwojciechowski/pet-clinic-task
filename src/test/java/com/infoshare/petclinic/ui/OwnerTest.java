@@ -4,18 +4,16 @@ import com.infoshare.petclinic.pages.AddOwnerPage;
 import com.infoshare.petclinic.pages.MainPage;
 import com.infoshare.petclinic.pages.FindOwnersPage;
 import com.infoshare.petclinic.pages.OwnerInfoPage;
-import org.easetech.easytest.annotation.DataLoader;
-import org.easetech.easytest.annotation.Param;
-import org.easetech.easytest.loader.LoaderType;
-import org.easetech.easytest.runner.DataDrivenTestRunner;
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(DataDrivenTestRunner.class)
-@DataLoader(filePaths = { "src/test/resources/ownerslist.xml" }, loaderType = LoaderType.XML, writeData = false)
+@RunWith(DataProviderRunner.class)
 public class OwnerTest extends BaseTest {
 
     private MainPage mainPage;
@@ -33,27 +31,33 @@ public class OwnerTest extends BaseTest {
     }
 
     @Test
-    public void addNewOwnerTest(@Param(name = "firstName") String firstName,
-                                    @Param(name = "lastName") String lastName,
-                                    @Param(name = "address") String address,
-                                    @Param(name = "city") String city,
-                                    @Param(name = "phoneNumber") String phoneNumber) {
+    @UseDataProvider("ownerList")
+    public void addNewOwnerTest(String firstName, String lastName, String address, String city, String phoneNumber) {
         findOwnersPage.clickAddOwner();
         addOwnerPage.addNewOwnerFullDetails(firstName, lastName, address, city, phoneNumber);
 
-        assertThat(ownerInfoPage.verifyTextIsDisplayed())
-                .isTrue();
+        assertThat(ownerInfoPage.verifyOwnerInfoIsDisplayed());
     }
 
-
-        @Test
-    public void verifyIfOwnerExistsTest(@Param(name = "firstName") String firstName,
-                                    @Param(name = "lastName") String lastName,
-                                    @Param(name = "address") String address,
-                                    @Param(name = "city") String city,
-                                    @Param(name = "phoneNumber") String phoneNumber) {
-
+    @Test
+    @UseDataProvider("ownerList")
+    public void searchExistingOwner(String firstName, String lastName, String address, String city, String phoneNumber){
         findOwnersPage.searchOwnerByName(lastName);
 
+        assertThat(ownerInfoPage.verifyOwnerInfoIsDisplayed());
+    }
+
+    @Test
+    public void searchNonExistingOwner(){
+        findOwnersPage.searchOwnerByName("nonExistingName");
+        assertThat(findOwnersPage.verifyNotFoundText());
+    }
+
+    @DataProvider
+    public static Object[][] ownerList() {
+        return new String[][]{
+                new String[]{"Jan", "Nowak", "ul. Grunwaldzka 452", "Gdansk", "877456123"},
+                new String[]{"John", "Snow", "ul. Pomorska 222", "Gdansk", "667456789"},
+                new String[]{"Michal", "Wozniak", "ul. Piastowska 3","Gdansk", "669456123"}};
     }
 }

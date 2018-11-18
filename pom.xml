@@ -12,6 +12,7 @@
         <version.selenium>3.14.0</version.selenium>
         <version.junit>4.12</version.junit>
         <version.assertj>3.11.1</version.assertj>
+        <version.tngtech>1.13.1</version.tngtech>
     </properties>
 
     <build>
@@ -47,11 +48,12 @@
             <version>${version.assertj}</version>
             <scope>test</scope>
         </dependency>
-        <!-- EasyTest -->
+        <!-- https://mvnrepository.com/artifact/com.tngtech.java/junit-dataprovider -->
         <dependency>
-            <groupId>org.easetech</groupId>
-            <artifactId>easytest-core</artifactId>
-            <version>1.3.2</version>
+            <groupId>com.tngtech.java</groupId>
+            <artifactId>junit-dataprovider</artifactId>
+            <version>${version.tngtech}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
